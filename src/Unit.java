@@ -133,7 +133,6 @@ public class Unit {
             Method m[] = cls.getMethods();
             LinkedList<Prop> properties = new LinkedList<>();
 
-            Object tObj = (Object) cls.getDeclaredConstructor().newInstance();
             for (int i = 0; i < m.length; i++) {
                 Annotation[] ant = m[i].getAnnotations();
                 if (ant.length > 1) throw new RuntimeException();
@@ -158,7 +157,7 @@ public class Unit {
                         if (Modifier.isStatic(mtd.getModifiers()))
                             b = ((Boolean) mtd.invoke(null)).booleanValue();
                         else
-                            b = ((Boolean) mtd.invoke(tObj, null)).booleanValue();
+                            b = ((Boolean) mtd.invoke((Object) cls.getDeclaredConstructor().newInstance(), null)).booleanValue();
                         ++quickCheck_totalExeCnt;
                         if (!b) {
                             ret.put(mtd.getName(), null);
@@ -176,7 +175,7 @@ public class Unit {
                             if (Modifier.isStatic(mtd.getModifiers()))
                                 b = ((Boolean) mtd.invoke(null, comb[q])).booleanValue();
                             else
-                                b = ((Boolean) mtd.invoke(tObj, comb[q])).booleanValue();
+                                b = ((Boolean) mtd.invoke((Object) cls.getDeclaredConstructor().newInstance(), comb[q])).booleanValue();
                             ++quickCheck_totalExeCnt;
                             if (!b) {
                                 ret.put(mtd.getName(), comb[q]);
